@@ -25,4 +25,10 @@ public class CustomerController {
     public ResponseEntity<CustomerResponse> getCustomerByEmail(@PathVariable("email") String email){
         return ResponseEntity.ok(customerService.retrieveCustomer(email));
     }
+
+    @PutMapping("/{email}")
+    public ResponseEntity<String> updateCustomer(@PathVariable("email") String email, @RequestBody @Valid CustomerRequest request){
+        customerService.updateCustomer(email, request);
+        return ResponseEntity.ok("Customer updated successfully");
+    }
 }

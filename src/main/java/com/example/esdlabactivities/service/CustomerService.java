@@ -10,6 +10,7 @@ import com.example.esdlabactivities.exception.CustomerNotFoundException;
 import com.example.esdlabactivities.helper.JWTHelper;
 import com.example.esdlabactivities.helper.RequestInterceptor;
 import com.example.esdlabactivities.helper.EncryptionService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 
@@ -51,4 +52,19 @@ public class CustomerService {
         Customer customer = getCustomer(email);
         return customerMapper.toCustomerResponse(customer);
     }
+
+    //Customer Update through email Service
+    @Transactional
+    public void updateCustomer(String email, CustomerRequest request){
+        Customer customer = customerRepo.findByEmail(email)
+                .orElseThrow(() -> new CustomerNotFoundException("Customer not found"));
+
+        customer.setFirstName(request.firstName());
+        customer.setLastName(request.lastName());
+        customer.setPassword(encryptionService.encode(request.password()));
+
+        customerRepo.save(customer);
+
+    }
+
 }
