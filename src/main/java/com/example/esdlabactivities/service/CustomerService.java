@@ -61,10 +61,17 @@ public class CustomerService {
 
         customer.setFirstName(request.firstName());
         customer.setLastName(request.lastName());
-        customer.setPassword(encryptionService.encode(request.password()));
 
         customerRepo.save(customer);
 
+    }
+
+    //Deleting Customer Service
+    public void deleteCustomer(String email){
+        Customer customer = customerRepo.findByEmail(email)
+                .orElseThrow(() -> new CustomerNotFoundException("Customer not found"));
+
+        customerRepo.delete(customer);
     }
 
 }
